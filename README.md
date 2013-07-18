@@ -12,7 +12,7 @@ Add devise_auditable to your Gemfile
 
 Run the installer
 
-    rails g devise_auditable:install
+    rails g devise_auditable User
 
 Add the auditable key to your devise user model
 
