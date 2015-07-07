@@ -23,18 +23,20 @@ class DeviseAuditableGenerator < Rails::Generators::NamedBase
   end
 
   class_option :orm
-  class_option :migration, :type => :boolean, :default => orm_has_migration?
+  class_option :migration, type: :boolean, default: orm_has_migration?
 
   def invoke_orm_model
-    create_file "app/models/#{name.downcase}_audit.rb", "class #{name}Audit < ActiveRecord::Base\n" <<
-      "attr_accessible :action, :action_occured_at, :client_ip, :user_agent, :#{name.downcase}_id\n" <<
-      "end"
+    create_file "app/models/#{name.downcase}_audit.rb", <<-RUBY
+class #{name}Audit < ActiveRecord::Base
+  validates :#{name.downcase}_id, presence: true
+end
+    RUBY
 
     if model_exists?
       say "* Model already exists."
     elsif options[:orm].present?
       invoke "model", ["#{name}Audits"], :migration => false, :orm => options[:orm]
-      
+
       unless model_exists?
         abort "Tried to invoke the model generator for '#{options[:orm]}' but could not find it.\n" <<
           "Please create your model by hand before calling `rails g devise_auditable #{name}`."
