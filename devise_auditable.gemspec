@@ -5,7 +5,7 @@ require "devise_auditable/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "devise_auditable"
+  s.name        = "devise-auditable"
   s.version     = DeviseAuditable::VERSION
   s.authors     = ["Nicholas W. Watson"]
   s.email       = ["nick@entropi.co"]
