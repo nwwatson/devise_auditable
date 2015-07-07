@@ -19,3 +19,6 @@ Add the auditable key to your devise user model
     class User < ActiveRecord::Base
       devise :database_authenticatable, ..... , :auditable
     end
+
+Optionally, you can add a `has_many` relationship to your devise
+model.

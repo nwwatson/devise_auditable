@@ -28,6 +28,8 @@ class DeviseAuditableGenerator < Rails::Generators::NamedBase
   def invoke_orm_model
     create_file "app/models/#{name.downcase}_audit.rb", <<-RUBY
 class #{name}Audit < ActiveRecord::Base
+  belongs_to :#{name.downcase}
+
   validates :#{name.downcase}_id, presence: true
 end
     RUBY
