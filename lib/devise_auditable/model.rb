@@ -3,27 +3,29 @@ require 'devise_auditable/hooks/auditable'
 module Devise
   module Models
     module Auditable
+      # NullRequest object for making audting access_mask changes
+      # since this is only changed via the console
+      NullRequestStruct = Struct.new(:remote_ip, :headers).new.tap do |req|
+        req.headers = {}.freeze
+      end.freeze
+
       def audit_login!(request)
-        audit!("login", request)
+        audit! 'login', request
       end
 
       def audit_logout!(request)
-        audit!("logout", request)
+        audit! 'logout', request
       end
 
-      def audit!(action, request)
-        Rails.logger.info "The Current Action is: #{action}"
-        Rails.logger.info "The Current Time is: #{Time.now}"
-        Rails.logger.info "The Current IP is: #{request.remote_ip}"
-        Rails.logger.info "The User Agent is: #{request.headers['User-Agent']}"
+      def audit!(action, request = NullRequestStruct)
+        "#{self.class.name}Audit".constantize.create({
+          action: action,
+          action_occured_at: Time.now,
+          client_ip: request.remote_ip,
+          user_agent: request.headers['User-Agent'],
 
-        "#{self.class}Audit".constantize.create(
-            action: action,
-            action_occured_at: Time.now,
-            client_ip: request.remote_ip,
-            user_agent: request.headers['User-Agent'],
-            "#{self.class}".foreign_key.to_sym => self.id
-          )
+          self.class.name.foreign_key => self.id
+        })
       end
     end
   end
