@@ -3,8 +3,6 @@ require 'devise_auditable/hooks/auditable'
 module Devise
   module Models
     module Auditable
-      # NullRequest object for making audting access_mask changes
-      # since this is only changed via the console
       NullRequestStruct = Struct.new(:remote_ip, :headers).new.tap do |req|
         req.headers = {}.freeze
       end.freeze
